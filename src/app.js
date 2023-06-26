@@ -18,6 +18,12 @@ function userIsValid(name){
 	return false;
 }
 
+function getAvatar(name){
+	const currentUser = users.find(user => user.username === name);
+	console.log(currentUser);
+	return currentUser.avatar;
+}
+
 app.post("/sign-up", (req, res) => {
 	const {username, avatar} = req.body;
 	const newUser = {
@@ -42,6 +48,21 @@ app.post("/tweets", (req, res) => {
 	else {
 		res.send("UNAUTHORIZED");
 	}
+})
+
+app.get("/tweets", (req, res) => {
+	const tweetsList = tweets.slice(-10);
+	const lastPostedTweets = [];
+	
+	for (let i=0; i<tweetsList.length; i++){
+		const tweetPosted = {
+			username: tweetsList[i].username,
+			avatar: getAvatar(tweetsList[i].username),
+			tweet: tweetsList[i].tweet
+		};
+		lastPostedTweets.push(tweetPosted);
+	}
+	res.send(lastPostedTweets);
 })
 
 
